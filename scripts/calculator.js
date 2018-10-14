@@ -1,3 +1,1 @@
-
-// new Igual nova Instancia
-let calculadora = new CalcController;
+window.calculator = new CalcController();
