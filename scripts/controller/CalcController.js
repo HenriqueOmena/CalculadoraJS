@@ -1,3 +1,7 @@
+
+
+
+
 class CalcController{
 
     constructor(){
@@ -42,11 +46,99 @@ class CalcController{
 
     }
 
-    addOperation(value){
+    getLastOperation(){
+
+        return this._operation[this._operation.length-1];
+
+    }
+
+    setLastOperation(value){
+
+        this._operation[this._operation.length - 1] = value;
+
+    }
+
+    isOperator(value){
+
+        return (['+','-','*','%','/'].indexOf(value) > -1);
+
+    }
+
+    pushOperation(value){
 
         this._operation.push(value);
 
-        console.log(this._operation);
+        if (this._operation.length > 3 ) {
+
+            this.calc();
+
+        }
+
+    }
+
+    calc(){
+
+        let last = this._operation.pop();
+
+        eval(this._operation.join(""));
+
+        this._operation = [result, last];
+
+    }
+
+    setLastnumberToDisplay(){
+
+        let lastNumber;
+
+        for(let i = this._operation,length-1; i >= 0; i--){
+            if (this.isOperator(this._operation[i])) {
+                
+                lastNumber = this._operation[i];
+                break;
+
+            }
+        }
+
+    }
+
+
+    addOperation(value){
+
+        if (isNaN(this.getLastOperation())) {
+
+            //em caso de string cai aqui
+            if(this.isOperator(value)){
+
+                //troca operador
+                this.setLastOperation(value);
+
+            }else if(isNaN(value)){
+
+                console.log('Outra coisa', value);
+
+            }else {
+
+                this.pushOperation(value)
+
+            }
+
+        }else{
+
+            if (this.isOperator(value)) {
+                
+                this.pushOperation(value)
+
+            } else{
+                //em caso de NUMERO cai aqui
+                let newValue = this.getLastOperation().toString() + value.toString();
+                this.setLastOperation(parseInt(newValue));
+
+
+                //Atualizar display
+                this.setLastnumberToDisplay()
+            }
+   
+        }
 
     }
 
@@ -66,22 +158,25 @@ class CalcController{
                 this.clearEntry();
                 break;
             case 'soma':
-                
+            this.addOperation('+');
                 break;
             case 'subtracao':
-                
+            this.addOperation('-');
                 break;
             case 'divisao':
-                
+            this.addOperation('/');
                 break;
             case 'multiplicacao':
-                
+            this.addOperation('*');
                 break;
             case 'porcento':
-                
+            this.addOperation('%');
                 break;
             case 'igual':
-                
+            
+                break
+            case 'ponto':
+            this.addOperation('.');     
                 break;
 
             case '0':
@@ -113,7 +208,7 @@ class CalcController{
 
                 let textBtn = btn.className.baseVal.replace("btn-","");
 
-                this.execBtn();
+                this.execBtn(textBtn);
 
 
             });
